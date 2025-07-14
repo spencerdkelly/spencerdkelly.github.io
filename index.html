@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dyslexia Reading Simulator</title>
+    <!-- Tailwind CSS for basic styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for the Inter font and overall layout */
+        body {
+            font-family: "Inter", sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f2f5; /* Light gray background */
+            padding: 1rem;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 1rem; /* Rounded corners */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+        #dyslexia-text {
+            font-size: 1.5rem; /* Larger font size for readability */
+            line-height: 1.8; /* Increased line height */
+            color: #333;
+            margin-bottom: 1.5rem;
+            text-align: left; /* Align text left within its container */
+            min-height: 200px; /* Ensure some height even if content is short */
+            padding: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 0.5rem;
+            background-color: #f9f9f9;
+        }
+        button {
+            padding: 10px 20px !important;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: .75rem; /* More rounded buttons */
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-block !important;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .start-button {
+            background-color: #4CAF50; /* Green for start */
+            color: white;
+            border: none;
+        }
+        .start-button:hover {
+            background-color: #45a049;
+        }
+        .stop-button {
+            background-color: #f44336; /* Red for stop */
+            color: white;
+            border: none;
+        }
+        .stop-button:hover {
+            background-color: #da190b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="text-3xl font-bold mb-6 text-gray-800">Dyslexia Reading Simulator</h1>
+        <p class="text-gray-600 mb-4">
+            Click the button below to experience a simulation of how text might appear to someone with dyslexia.
+            The middle letters of words will continuously scramble, while the first and last letters remain fixed.
+        </p>
+
+        <div id="dyslexia-text" class="text-lg text-gray-700">
+            This is an example paragraph to demonstrate the dyslexia reading effect.
+            It aims to simulate the visual challenges that some individuals with dyslexia might experience when reading.
+            Notice how the letters within words might jump, swap, or become jumbled, making it harder to process the text quickly and accurately.
+            The quick brown fox jumps over the lazy dog. Programming is a fascinating field.
+            Numbers like 12345 and symbols like !@#$%^&*() should remain unaffected.
+            Short words like "a", "an", "the", "is", "it" are also generally not scrambled.
+        </div>
+
+        <button id="toggle-button" class="start-button" onclick="toggleDyslexiaEffect()">
+            Start Dyslexia Effect
+        </button>
+    </div>
+
+    <script>
+        // Global variables to manage the scrambling effect
+        let scramblingIntervalId = null;
+        // Store original text content for elements by their ID
+        let originalTextContent = {};
+
+        /**
+         * Scrambles the middle letters of a word, keeping the first and last letters in place.
+         * Handles punctuation by keeping it at the beginning/end.
+         * Words shorter than 4 characters or words without alphabetic characters are not scrambled.
+         * @param {string} word The word to scramble.
+         * @returns {string} The scrambled word.
+         */
+        function scrambleWord(word) {
+            // If the word is too short or contains no letters, return it as is.
+            // This prevents scrambling of numbers, symbols, or very short words.
+            if (word.length <= 3 || !/[a-zA-Z]/.test(word)) {
+                return word;
+            }
+
+            // Separate leading non-alphabetic characters (e.g., "(hello")
+            const leadingNonAlphaMatch = word.match(/^[^a-zA-Z]*/);
+            const leadingNonAlpha = leadingNonAlphaMatch ? leadingNonAlphaMatch[0] : '';
+
+            // Separate trailing non-alphabetic characters (e.g., "hello.")
+            const trailingNonAlphaMatch = word.match(/[^a-zA-Z]*$/);
+            const trailingNonAlpha = trailingNonAlphaMatch ? trailingNonAlphaMatch[0] : '';
+
+            // Extract the core alphabetic part of the word
+            const coreWord = word.substring(leadingNonAlpha.length, word.length - trailingNonAlpha.length);
+
+            // If the core word is too short to scramble its middle, return the original word.
+            if (coreWord.length <= 3) {
+                return word;
+            }
+
+            const firstChar = coreWord[0];
+            const lastChar = coreWord[coreWord.length - 1];
+            // Get the middle characters as an array to shuffle
+            let middleChars = coreWord.substring(1, coreWord.length - 1).split('');
+
+            // Fisher-Yates (Knuth) shuffle algorithm for randomizing the middle characters
+            for (let i = middleChars.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                // Swap characters
+                [middleChars[i], middleChars[j]] = [middleChars[j], middleChars[i]];
+            }
+
+            // Reconstruct the word: leading punctuation + first char + scrambled middle + last char + trailing punctuation
+            return leadingNonAlpha + firstChar + middleChars.join('') + lastChar + trailingNonAlpha;
+        }
+
+        /**
+         * Applies the dyslexia scrambling effect to the text content of a specified HTML element.
+         * It takes the original text, scrambles it, and updates the element's text content.
+         * @param {string} elementId The ID of the HTML element whose text content will be scrambled.
+         */
+        function applyDyslexiaEffect(elementId) {
+            const element = document.getElementById(elementId);
+            if (!element) {
+                console.error(`Element with ID "${elementId}" not found.`);
+                return;
+            }
+
+            // If the original text for this element hasn't been stored yet, store it.
+            // We use textContent to get plain text, ignoring any HTML tags inside.
+            if (!originalTextContent[elementId]) {
+                originalTextContent[elementId] = element.textContent;
+            }
+
+            const text = originalTextContent[elementId];
+            // Split the text into parts, preserving spaces.
+            // The regex /(\s+)/ splits by one or more spaces but includes the spaces in the resulting array.
+            // This ensures that original spacing between words is maintained.
+            const parts = text.split(/(\s+)/);
+
+            const scrambledParts = parts.map(part => {
+                // If the part is just whitespace, return it as is.
+                if (part.trim() === '') {
+                    return part;
+                }
+                // Otherwise, scramble the word part.
+                return scrambleWord(part);
+            });
+
+            // Join the scrambled parts back together and update the element's text.
+            element.textContent = scrambledParts.join('');
+        }
+
+        /**
+         * Starts the continuous dyslexia scrambling effect on an HTML element.
+         * Clears any existing interval for the element before starting a new one.
+         * @param {string} elementId The ID of the HTML element to apply the effect to.
+         * @param {number} intervalMs The interval in milliseconds between scrambling updates.
+         */
+        function startDyslexiaScramble(elementId, intervalMs = 150) {
+            // Stop any existing interval to prevent multiple intervals running simultaneously
+            stopDyslexiaScramble(elementId);
+
+            // Store the original content before starting to scramble, if not already stored.
+            // This ensures we always have a clean version to revert to.
+            const element = document.getElementById(elementId);
+            if (element && !originalTextContent[elementId]) {
+                originalTextContent[elementId] = element.textContent;
+            }
+
+            // Set up the interval to continuously apply the scrambling effect
+            scramblingIntervalId = setInterval(() => applyDyslexiaEffect(elementId), intervalMs);
+            console.log(`Dyslexia scramble started for element "${elementId}" with interval ${intervalMs}ms.`);
+        }
+
+        /**
+         * Stops the dyslexia scrambling effect and reverts the element's text to its original content.
+         * @param {string} elementId The ID of the HTML element to stop the effect on.
+         */
+        function stopDyslexiaScramble(elementId) {
+            if (scramblingIntervalId) {
+                clearInterval(scramblingIntervalId); // Clear the interval to stop updates
+                scramblingIntervalId = null; // Reset the interval ID
+                console.log(`Dyslexia scramble stopped for element "${elementId}".`);
+            }
+
+            // Revert to the original text content if it was stored
+            const element = document.getElementById(elementId);
+            if (element && originalTextContent[elementId]) {
+                element.textContent = originalTextContent[elementId];
+                // Clean up the stored original text for this element
+                delete originalTextContent[elementId];
+            }
+        }
+
+        /**
+         * Toggles the dyslexia effect on or off for the target element.
+         * Updates the button text accordingly.
+         */
+        function toggleDyslexiaEffect() {
+            const targetElementId = 'dyslexia-text'; // The ID of the div containing the text
+            const toggleButton = document.getElementById('toggle-button');
+
+            if (scramblingIntervalId) {
+                // If scrambling is active, stop it
+                stopDyslexiaScramble(targetElementId);
+                if (toggleButton) {
+                    toggleButton.textContent = 'Start Dyslexia Effect';
+                    toggleButton.classList.remove('stop-button');
+                    toggleButton.classList.add('start-button');
+                }
+            } else {
+                // If scrambling is not active, start it
+                startDyslexiaScramble(targetElementId, 150); // Interval of 150ms for a noticeable effect
+                if (toggleButton) {
+                    toggleButton.textContent = 'Stop Dyslexia Effect';
+                    toggleButton.classList.remove('start-button');
+                    toggleButton.classList.add('stop-button');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
