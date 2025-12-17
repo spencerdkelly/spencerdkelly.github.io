@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting…</title>
+
+    <script>
+      (async function () {
+        const params = new URLSearchParams(window.location.search);
+
+        const to = params.get("to");
+        if (!to) return;
+
+        const logUrl =
+          "https://script.google.com/macros/s/YOUR_ID/exec?" +
+          params.toString();
+
+        // Fire-and-forget logging
+        try {
+          fetch(logUrl, { mode: "no-cors" });
+        } catch (e) {
+          // Ignore logging errors
+        }
+
+        // Immediate, top-level redirect
+        window.location.replace(to);
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
