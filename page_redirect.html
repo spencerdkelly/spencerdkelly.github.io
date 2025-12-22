@@ -50,7 +50,7 @@ const params = new URLSearchParams(window.location.search);
 const surveyName = params.get("survey_name");
 const slide = params.get("slide");
 const answer = params.get("answer");
-const nextLink = params.get("next");
+const nextLink = params.get("to");
 
 // Log this interaction
 if (surveyName || slide || answer) {
