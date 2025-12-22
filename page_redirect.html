@@ -47,15 +47,15 @@ function logEvent(data) {
 ============================ */
 const params = new URLSearchParams(window.location.search);
 
-const surveyName = params.get("survey_name");
+const survey = params.get("survey");
 const slide = params.get("slide");
 const answer = params.get("answer");
 const nextLink = params.get("to");
 
 // Log this interaction
-if (surveyName || slide || answer) {
+if (survey || slide || answer) {
   logEvent({
-    survey_name: surveyName,
+    survey: survey,
     slide: slide,
     answer: answer
   });
@@ -76,7 +76,7 @@ function submitSurvey() {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      sheet: surveyName || "Default",
+      sheet: survey || "Default",
       user_id: userId,
       session_id: sessionId,
       events: events
