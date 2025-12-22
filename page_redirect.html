@@ -12,6 +12,21 @@
 ============================ */
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxYhYYXvQRMtSstDsL8IBLWUgaD3StF3umW6gZ0baoQCL1HC6VR7TzuQJgQwpUVtJy8pA/exec";
 const SHEET_ID = "14r22rM7oMxfg-OHYMYxxbLaX9AaqckFL2jq7xOxsanM";
+
+/* ============================
+   READ EVENT FROM URL
+============================ */
+function readEventFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const event = params.get("event");
+  const label = params.get("label");
+
+  if (event) {
+    logEvent(event, label || "");
+  }
+}
+
+readEventFromURL();
   
 /* ============================
    USER + SESSION IDS
