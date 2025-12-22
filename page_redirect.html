@@ -69,20 +69,26 @@ const isFinal = true; //answer === "session_complete";
 /* ============================
    SUBMIT (BATCH)
 ============================ */
+
 function submitSurvey() {
   if (!events.length) return;
 
+  const payload = {
+    sheet: survey,
+    user_id: userId,
+    session_id: sessionId,
+    events: JSON.stringify(events)
+  };
+
+  const formBody = Object.entries(payload)
+    .map(([k, v]) => encodeURIComponent(k) + "=" + encodeURIComponent(v))
+    .join("&");
+
   fetch(WEB_APP_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      sheet: survey || "Default",
-      user_id: userId,
-      session_id: sessionId,
-      events: events
-    })
+    body: formBody
   })
-  .then(r => r.text())
+  .then(res => res.text())
   .then(console.log)
   .catch(console.error);
 }
