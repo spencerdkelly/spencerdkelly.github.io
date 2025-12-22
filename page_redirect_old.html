@@ -50,7 +50,7 @@
         if (!to) return;
 
         const logUrl =
-          "https://script.google.com/macros/s/AKfycbxYhYYXvQRMtSstDsL8IBLWUgaD3StF3umW6gZ0baoQCL1HC6VR7TzuQJgQwpUVtJy8pA/exec?" +
+          WEB_APP_URL + "?user_id=" + userId + "&session_id=" + sessionId + 
           params.toString();
 
         // Fire-and-forget logging
