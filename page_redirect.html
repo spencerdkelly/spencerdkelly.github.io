@@ -12,28 +12,11 @@
 ============================ */
 const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxYhYYXvQRMtSstDsL8IBLWUgaD3StF3umW6gZ0baoQCL1HC6VR7TzuQJgQwpUVtJy8pA/exec";
 const SHEET_ID = "14r22rM7oMxfg-OHYMYxxbLaX9AaqckFL2jq7xOxsanM";
-
-/* ============================
-   READ EVENT FROM URL
-============================ */
-function readEventFromURL() {
-  const params = new URLSearchParams(window.location.search);
-  const event = params.get("event");
-  const label = params.get("label");
-
-  if (event) {
-    logEvent(event, label || "");
-  }
-}
-
-readEventFromURL();
-  
-/* ============================
-   USER + SESSION IDS
-============================ */
 const USER_KEY = "survey_user_id";
 
-// Persistent user ID (same browser)
+/* ============================
+   USER + SESSION
+============================ */
 function getUserId() {
   let id = localStorage.getItem(USER_KEY);
   if (!id) {
@@ -43,65 +26,80 @@ function getUserId() {
   return id;
 }
 
-// Per-survey session ID
 const userId = getUserId();
 const sessionId = crypto.randomUUID();
-
-/* ============================
-   EVENT BUFFER
-============================ */
 const events = [];
 
-function logEvent(event, label = "") {
+/* ============================
+   LOG EVENT
+============================ */
+function logEvent(data) {
   events.push({
-    event,
-    label,
+    ...data,
     ts: Date.now()
   });
 
-  console.log("Logged event:", event, label);
+  console.log("Logged event:", data);
 }
 
 /* ============================
-   SUBMIT (BATCH SEND)
+   READ FROM URL
 ============================ */
-function submitSurvey() {
-  if (!events.length) {
-    console.warn("No events to submit");
-    return;
-  }
+const params = new URLSearchParams(window.location.search);
 
-  const payload = {
-    sheet: SHEET_NAME,
-    user_id: userId,
-    session_id: sessionId,
-    events: events
-  };
+const surveyName = params.get("survey_name");
+const slide = params.get("slide");
+const answer = params.get("answer");
+const nextLink = params.get("next");
 
-  fetch(WEB_APP_URL, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(payload)
-  })
-  .then(res => res.text())
-  .then(text => {
-    console.log("Submission result:", text);
-  })
-  .catch(err => {
-    console.error("Submission failed:", err);
+// Log this interaction
+if (surveyName || slide || answer) {
+  logEvent({
+    survey_name: surveyName,
+    slide: slide,
+    answer: answer
   });
 }
 
 /* ============================
-   EXAMPLE USAGE
+   FINAL SUBMIT DETECTION
 ============================ */
-// Call these from your UI logic
-// logEvent("cta_click", "hero_button");
-// logEvent("option_select", "plan_b");
-// submitSurvey();
+const isFinal = answer === "session_complete";
 
+/* ============================
+   SUBMIT (BATCH)
+============================ */
+function submitSurvey() {
+  if (!events.length) return;
+
+  fetch(WEB_APP_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      sheet: surveyName || "Default",
+      user_id: userId,
+      session_id: sessionId,
+      events: events
+    })
+  })
+  .then(r => r.text())
+  .then(console.log)
+  .catch(console.error);
+}
+
+/* ============================
+   FLOW CONTROL
+============================ */
+if (isFinal) {
+  submitSurvey();
+}
+
+// Redirect back to Figma (or elsewhere)
+if (nextLink) {
+  setTimeout(() => {
+    window.location.href = nextLink;
+  }, 50);
+}
 </script>
 
 </body>
