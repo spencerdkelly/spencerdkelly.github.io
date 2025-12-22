@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Survey Intermediary</title>
+</head>
+<body>
+
+<script>
+/* ============================
+   CONFIG
+============================ */
+const WEB_APP_URL = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec";
+const SHEET_NAME = "Survey_A";
+
+/* ============================
+   USER + SESSION IDS
+============================ */
+const USER_KEY = "survey_user_id";
+
+// Persistent user ID (same browser)
+function getUserId() {
+  let id = localStorage.getItem(USER_KEY);
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem(USER_KEY, id);
+  }
+  return id;
+}
+
+// Per-survey session ID
+const userId = getUserId();
+const sessionId = crypto.randomUUID();
+
+/* ============================
+   EVENT BUFFER
+============================ */
+const events = [];
+
+function logEvent(event, label = "") {
+  events.push({
+    event,
+    label,
+    ts: Date.now()
+  });
+
+  console.log("Logged event:", event, label);
+}
+
+/* ============================
+   SUBMIT (BATCH SEND)
+============================ */
+function submitSurvey() {
+  if (!events.length) {
+    console.warn("No events to submit");
+    return;
+  }
+
+  const payload = {
+    sheet: SHEET_NAME,
+    user_id: userId,
+    session_id: sessionId,
+    events: events
+  };
+
+  fetch(WEB_APP_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.text())
+  .then(text => {
+    console.log("Submission result:", text);
+  })
+  .catch(err => {
+    console.error("Submission failed:", err);
+  });
+}
+
+/* ============================
+   EXAMPLE USAGE
+============================ */
+// Call these from your UI logic
+// logEvent("cta_click", "hero_button");
+// logEvent("option_select", "plan_b");
+// submitSurvey();
+
+</script>
+
+</body>
+</html>
