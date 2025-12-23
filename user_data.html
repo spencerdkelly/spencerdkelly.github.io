@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>User Data 1</title>
+    <title>User Data</title>
 
     <script>
       
@@ -19,43 +19,17 @@
       }
       
       const userId = getUserId();
-      const events = [];
-      
-      /* ============================
-         LOG EVENT
-      ============================ */
-      function logEvent(data) {
-        events.push({
-          ...data,
-          ts: Date.now()
-        });
-      
-        console.log("Logged event:", data);
-      }
 
       /* ============================
-         LOG DATA
+         LOG USER DATA
       ============================ */
       (async function () {
         const params = new URLSearchParams(window.location.search);
 
+        const to = params.get("age");
         const to = params.get("to");
         if (!to) return;
-
-        const logUrl =
-          WEB_APP_URL + "?user_id=" + userId + "&"
-          + params.toString();
-
-        console.log(logUrl);
         
-
-        // Fire-and-forget logging
-        try {
-          fetch(logUrl, { mode: "no-cors" });
-        } catch (e) {
-          // Ignore logging errors
-        }
-
         // Immediate, top-level redirect
         window.location.replace(to);
       })();
