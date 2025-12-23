@@ -9,6 +9,8 @@
       /* ============================
          USER DATA
       ============================ */
+
+      // ID
       function getUserId() {
         let id = localStorage.getItem(USER_KEY);
         if (!id) {
@@ -17,7 +19,7 @@
         }
         return id;
       }
-      
+    
       const userId = getUserId();
 
       /* ============================
@@ -29,6 +31,9 @@
         const age = params.get("user_age");
         const to = params.get("to");
         if (!to) return;
+
+        // Set user age in local storage
+        localStorage.setItem(USER_AGE, age);
         
         // Immediate, top-level redirect
         window.location.replace(to);
