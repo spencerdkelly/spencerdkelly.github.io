@@ -13,7 +13,7 @@
       const USER_KEY = "survey_user_id";
       
       /* ============================
-         USER + SESSION
+         USER
       ============================ */
       function getUserId() {
         let id = localStorage.getItem(USER_KEY);
@@ -23,8 +23,18 @@
         }
         return id;
       }
+
+      function getUserAge() {
+        let age = localStorage.getItem(USER_AGE);
+        if (!age) {
+          age = "unknown";
+          localStorage.setItem(USER_AGE, age);
+        }
+        return id;
+      }
       
       const userId = getUserId();
+      const userAge = getUserAge();
       const events = [];
       
       /* ============================
@@ -35,8 +45,6 @@
           ...data,
           ts: Date.now()
         });
-      
-        console.log("Logged event:", data);
       }
 
       /* ============================
@@ -49,11 +57,8 @@
         if (!to) return;
 
         const logUrl =
-          WEB_APP_URL + "?user_id=" + userId + "&"
+          WEB_APP_URL + "?user_id=" + userId + "?user_age=" + userAge + "&"
           + params.toString();
-
-        console.log(logUrl);
-        
 
         // Fire-and-forget logging
         try {
