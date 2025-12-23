@@ -25,7 +25,6 @@
       }
       
       const userId = getUserId();
-      const sessionId = crypto.randomUUID();
       const events = [];
       
       /* ============================
@@ -50,7 +49,7 @@
         if (!to) return;
 
         const logUrl =
-          WEB_APP_URL + "?user_id=" + userId + "&session_id=" + sessionId + "&"
+          WEB_APP_URL + "?user_id=" + userId + "&"
           + params.toString();
 
         console.log(logUrl);
