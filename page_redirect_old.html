@@ -50,10 +50,11 @@
         if (!to) return;
 
         const logUrl =
-          WEB_APP_URL + "?user_id=" + userId.toString() + "&session_id=" + sessionId.toString() + 
-          params.toString();
+          encodeURI(WEB_APP_URL + "?user_id=" + userId.toString() + "&session_id=" + sessionId.toString() + 
+          params.toString());
 
         console.log(logUrl);
+        
 
         // Fire-and-forget logging
         try {
