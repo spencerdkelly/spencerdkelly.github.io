@@ -53,7 +53,7 @@
           encodeURI(WEB_APP_URL + "?user_id=" + userId.toString() + "&session_id=" + sessionId.toString() + 
           params.toString());
 
-        console.log(logUrl);
+        console.log(decodeURIComponent(logUrl));
         
 
         // Fire-and-forget logging
