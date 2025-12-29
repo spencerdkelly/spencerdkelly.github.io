@@ -10,6 +10,7 @@
       ============================ */
       const USER_KEY = "survey_user_id";
       const USER_AGE = "survey_user_age";
+      const SURVEY_NAME = "survey_name";
       
       /* ============================
          USER DATA
@@ -33,12 +34,16 @@
       (async function () {
         const params = new URLSearchParams(window.location.search);
 
+        const survey = params.get("survey");
         const age = params.get("user_age");
         const to = params.get("to");
         if (!to) return;
 
         // Set user age in local storage
         localStorage.setItem(USER_AGE, age);
+
+        // Set survey name in local storage
+        localStorage.setItem(SURVEY_NAME, survey);
         
         // Immediate, top-level redirect
         window.location.replace(to);
