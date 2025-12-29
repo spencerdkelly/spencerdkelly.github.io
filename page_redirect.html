@@ -12,6 +12,7 @@
       const SHEET_ID = "14r22rM7oMxfg-OHYMYxxbLaX9AaqckFL2jq7xOxsanM";
       const USER_KEY = "survey_user_id";
       const USER_AGE = "survey_user_age";
+      const SURVEY = "survey_name";
       
       /* ============================
          USER
@@ -33,9 +34,19 @@
         }
         return age;
       }
+
+      function getSurvey() {
+        let survey = localStorage.getItem(SURVEY);
+        if (!survey) {
+          survey = "unknown";
+          localStorage.setItem(SURVEY, survey);
+        }
+        return survey;
+      }
       
       const userId = getUserId();
       const userAge = getUserAge();
+      const surveyName = getSurvey();
       const events = [];
       
       /* ============================
@@ -58,7 +69,7 @@
         if (!to) return;
 
         const logUrl =
-          WEB_APP_URL + "?user_id=" + userId + "&user_age=" + userAge + "&"
+          WEB_APP_URL + "?user_id=" + userId + "&user_age=" + userAge + "&survey=" + surveyName + "&"
           + params.toString();
 
         // Fire-and-forget logging
