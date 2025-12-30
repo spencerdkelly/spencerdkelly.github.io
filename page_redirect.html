@@ -113,8 +113,9 @@
           } else {
             to = to + "/end";
           }
-        } else {
-          // log survey data
+        }
+
+        // log survey data
           const logUrl =
           WEB_APP_URL + 
           "?user_id=" + userId + 
@@ -132,7 +133,6 @@
           } catch (e) {
             // Ignore logging errors
           }
-        }
 
         // Immediate, top-level redirect
         window.location.replace(to);
