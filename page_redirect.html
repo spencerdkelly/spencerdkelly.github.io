@@ -62,7 +62,7 @@
       function getProlificStudyId() {
         let study_id = localStorage.getItem(PROLIFIC_STUDY_ID);
         if (!study_id) {
-          study_id = "SSS";
+          study_id = "–";
           localStorage.setItem(PROLIFIC_STUDY_ID, study_id);
         }
         return study_id;
