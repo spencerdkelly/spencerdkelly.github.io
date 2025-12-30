@@ -108,10 +108,10 @@
         // END OF SURVEY CHECK
         // If the user is from Prolific redirect to the Prolific end screen
         if (end) {
-          if (prolificSessionID) {
-            let to = to + "/end-prolific";
+          if (prolificSessionID !== "–") {
+            to = to + "/end-prolific";
           } else {
-            let to = to + "/end";
+            to = to + "/end";
           }
         } else {
           // log survey data
