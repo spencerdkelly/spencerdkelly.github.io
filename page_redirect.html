@@ -13,6 +13,9 @@
       const USER_KEY = "survey_user_id";
       const USER_AGE = "survey_user_age";
       const SURVEY_NAME = "survey_name";
+      const PROLIFIC_PID = "prolific_pid";
+      const PROLIFIC_STUDY_ID = "prolific_stidy_id";
+      const PROLIFIC_SESSION_ID = "prolific_session_id";
       
       /* ============================
          USER
@@ -43,10 +46,44 @@
         }
         return survey;
       }
+
+      // PROLIFIC SURVEY DATA 
+      // If a prolific audience member then session data will be present
+
+      function getProlificPid() {
+        let pid = localStorage.getItem(PROLIFIC_PID);
+        if (!pid) {
+          pid = "–";
+          localStorage.setItem(PROLIFIC_PID, pid);
+        }
+        return pid;
+      }
+
+      function getProlificStudyId() {
+        let study_id = localStorage.getItem(PROLIFIC_STUDY_ID);
+        if (!study_id) {
+          study_id = "–";
+          localStorage.setItem(PROLIFIC_STUDY_ID, study_id);
+        }
+        return study_id;
+      }
+
+      function getProlificSessionId() {
+        let session_id = localStorage.getItem(PROLIFIC_SESSION_ID);
+        if (!session_id) {
+          session_id = "–";
+          localStorage.setItem(PROLIFIC_SESSION_ID, session_id);
+        }
+        return session_id;
+      }
       
       const userId = getUserId();
       const userAge = getUserAge();
       const surveyName = getSurvey();
+      // Prolific survey data 
+      const prolificPID = getProlificPid();
+      const prolificStudyID = getProlificStudyId();
+      const prolificSessionID = getProlificSessionId();
       const events = [];
       
       /* ============================
@@ -69,7 +106,14 @@
         if (!to) return;
 
         const logUrl =
-          WEB_APP_URL + "?user_id=" + userId + "&user_age=" + userAge + "&survey=" + surveyName + "&"
+          WEB_APP_URL + 
+          "?user_id=" + userId + 
+          "&user_age=" + userAge + 
+          "&survey=" + surveyName + 
+          "&prolific_pid=" + prolificPID + 
+          "&prolific_study_id=" + prolificStudyID +
+          "&prolific_session_id=" + prolificSessionID +
+          "&"
           + params.toString();
 
         // Fire-and-forget logging
