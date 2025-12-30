@@ -46,7 +46,7 @@
         }
         return survey;
       }
-
+      
       // PROLIFIC SURVEY DATA 
       // If a prolific audience member then session data will be present
 
@@ -97,15 +97,27 @@
       }
 
       /* ============================
-         LOG DATA
+         LOG DATA / OR END SURVEY
       ============================ */
       (async function () {
         const params = new URLSearchParams(window.location.search);
 
         const to = params.get("to");
-        if (!to) return;
+        const end = params.get("end");
 
-        const logUrl =
+        // END OF SURVEY CHECK
+        // If the user is from Prolific redirect to the Prolific end screen
+        if (end) {
+          if (prolificSessionID) {
+            // redirect to Proflific end screen
+            let to = to + "/end-prolific";
+          } else {
+            // standard ending
+            let to = "/end";
+          }
+        } else {
+          // log survey data
+          const logUrl =
           WEB_APP_URL + 
           "?user_id=" + userId + 
           "&user_age=" + userAge + 
@@ -116,11 +128,12 @@
           "&"
           + params.toString();
 
-        // Fire-and-forget logging
-        try {
-          fetch(logUrl, { mode: "no-cors" });
-        } catch (e) {
-          // Ignore logging errors
+          // Fire-and-forget logging
+          try {
+            fetch(logUrl, { mode: "no-cors" });
+          } catch (e) {
+            // Ignore logging errors
+          }
         }
 
         // Immediate, top-level redirect
