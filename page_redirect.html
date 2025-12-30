@@ -102,8 +102,8 @@
       (async function () {
         const params = new URLSearchParams(window.location.search);
 
-        const to = params.get("to");
-        const end = params.get("end");
+        let to = params.get("to");
+        let end = params.get("end");
 
         if (!to) return;
 
