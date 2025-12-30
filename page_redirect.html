@@ -105,6 +105,8 @@
         const to = params.get("to");
         const end = params.get("end");
 
+        if (!to) return;
+
         // END OF SURVEY CHECK
         // If the user is from Prolific redirect to the Prolific end screen
         if (end) {
