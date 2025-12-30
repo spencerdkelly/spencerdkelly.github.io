@@ -110,6 +110,7 @@
         // END OF SURVEY CHECK
         // If the user is from Prolific redirect to the Prolific end screen
         if (end) {
+          localStorage.clear();
           if (prolificSessionID !== "–") {
             to = to + "/end-prolific";
           } else {
