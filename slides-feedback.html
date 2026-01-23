@@ -16,18 +16,6 @@
   // ---------------------------
   // LOG DATA 
   // ---------------------------
-
-  function getViewerEmail() {
-    try {
-      const email = Session.getActiveUser().getEmail();
-      return email && email !== '' ? email : 'unknown';
-    } catch (e) {
-      return 'unknown';
-    }
-  }
-
-  const email = getViewerEmail();
-  console.log('email = ' + email);
   
   (async function () {
     const params = new URLSearchParams(window.location.search);
@@ -51,7 +39,8 @@
     console.log('logUrl = ' + logUrl);
     
     // Immediate, top-level redirect
-    // window.location.replace(to);
+    window.location.replace(to);
+    
   })();
   
 </script>
