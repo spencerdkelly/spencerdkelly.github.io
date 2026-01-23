@@ -10,25 +10,36 @@
   // CONFIG
   // -------------------------
   const WEB_APP_URL = "https://script.google.com/a/macros/randstadsourceright.co.uk/s/AKfycbzaYZWuQ5LoF2YNjITz8OHz5LMw_JVjvOUie8O3ByP0CWUKd4xMBX3evnTD8PfhQMkl/exec";
-  const params = new URLSearchParams(window.location.search);
   const userId = "XXX";
-  const slideUrl = "https://bbc.com";
+  const to = "https://bbc.com";
 
-  // Build async request URL
-  const logUrl =
-          WEB_APP_URL + 
-          "?user_id=" + userId + 
-          "&"
-          + params.toString();
+  // ---------------------------
+  // LOG DATA / OR END SURVEY
+  // ---------------------------
+  (async function () {
+    const params = new URLSearchParams(window.location.search);
 
-  // Send click asynchronously
-  fetch(logUrl, { method: 'GET', mode: 'no-cors' })
-    .catch(e => console.log('Logging failed:', e));
+    let to = params.get("to");
+    if (!to) return;
 
-  // Immediately redirect back to the slide
-  if (slideUrl) {
-    window.location.replace(slideUrl);
-  }
+    // log data
+      const logUrl =
+      WEB_APP_URL + 
+      "?user_id=" + userId + 
+      "&"
+      + params.toString();
+
+      // Fire-and-forget logging
+      try {
+        fetch(logUrl, { mode: "no-cors" });
+      } catch (e) {
+        // Ignore logging errors
+      }
+
+    // Immediate, top-level redirect
+    window.location.replace(to);
+  })();
+  
 </script>
 </body>
 </html>
