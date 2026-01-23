@@ -31,13 +31,8 @@
 
       console.log('logUrl = ' + logUrl);
 
-      // Fire-and-forget logging
-      try {
-        fetch(logUrl, { mode: "no-cors" });
-        console.log('success');
-      } catch (e) {
-        // Ignore logging errors
-      }
+      // 🔥 RELIABLE background logging
+      navigator.sendBeacon(logUrl);
 
     // Immediate, top-level redirect
     // window.location.replace(to);
