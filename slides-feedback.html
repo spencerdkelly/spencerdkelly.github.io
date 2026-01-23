@@ -1,1 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Slides Feedback Intermediary</title>
+</head>
+<body>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const webAppUrl = params.get('webApp'); // Apps Script URL
+  const slideUrl = params.get('slide');   // Current slide URL
+
+  // Build async request URL
+  const logUrl = webAppUrl + '?' + params.toString();
+
+  // Send click asynchronously
+  fetch(logUrl, { method: 'GET', mode: 'no-cors' })
+    .catch(e => console.log('Logging failed:', e));
+
+  // Immediately redirect back to the slide
+  if (slideUrl) {
+    window.location.replace(slideUrl);
+  }
+</script>
+</body>
+</html>
 
