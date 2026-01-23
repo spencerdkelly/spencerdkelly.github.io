@@ -15,9 +15,17 @@
   const params = new URLSearchParams(window.location.search);
   const webAppUrl = params.get('webApp'); // Apps Script URL
   const slideUrl = params.get('slide');   // Current slide URL
+  const userId = "XXX";
 
   // Build async request URL
   const logUrl = webAppUrl + '?' + params.toString();
+
+
+  const logUrl =
+          WEB_APP_URL + 
+          "?user_id=" + userId + 
+          "&"
+          + params.toString();
 
   // Send click asynchronously
   fetch(logUrl, { method: 'GET', mode: 'no-cors' })
