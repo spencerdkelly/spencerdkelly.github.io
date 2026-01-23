@@ -22,7 +22,7 @@
     //let to = params.get("to");
     //if (!to) return;
 
-    // log data
+    /*
       const logUrl =
       WEB_APP_URL + 
       "?user_id=" + userId + 
@@ -30,9 +30,17 @@
       + params.toString();
 
       console.log('logUrl = ' + logUrl);
+      */
 
-      // 🔥 RELIABLE background logging
-      navigator.sendBeacon(logUrl);
+    // Build payload
+    const payload = new URLSearchParams();
+    payload.append("user_id", "XXX");
+    payload.append("slide", params.get("slide"));
+    payload.append("answer", params.get("answer"));
+  
+    // 🔥 THIS NOW WORKS
+    navigator.sendBeacon(WEB_APP_URL, payload);
+
 
     // Immediate, top-level redirect
     // window.location.replace(to);
