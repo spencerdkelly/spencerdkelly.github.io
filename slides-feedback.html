@@ -10,17 +10,10 @@
   // CONFIG
   // -------------------------
   const WEB_APP_URL = "https://script.google.com/a/macros/randstadsourceright.co.uk/s/AKfycbzaYZWuQ5LoF2YNjITz8OHz5LMw_JVjvOUie8O3ByP0CWUKd4xMBX3evnTD8PfhQMkl/exec";
-  const SHEET_ID = "1ao4TO8bELOx74VbFa_l3LWM185T90vP2OTaDZZAm_WM";
-  
   const params = new URLSearchParams(window.location.search);
-  const webAppUrl = params.get('webApp'); // Apps Script URL
-  const slideUrl = params.get('slide');   // Current slide URL
   const userId = "XXX";
 
   // Build async request URL
-  const logUrl = webAppUrl + '?' + params.toString();
-
-
   const logUrl =
           WEB_APP_URL + 
           "?user_id=" + userId + 
