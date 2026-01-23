@@ -9,7 +9,7 @@
   // -------------------------
   // CONFIG
   // -------------------------
-  const WEB_APP_URL = "https://script.google.com/a/macros/randstadsourceright.co.uk/s/AKfycbz0q_I8WP6VWqd2wJLjDnmrE9fM7W-NGdmriuyptdPbfAjVfH0qes7DVeZ1AGWsVQ1b/exec";
+  const WEB_APP_URL = "https://script.google.com/a/macros/randstadsourceright.co.uk/s/AKfycbw9zsitE0yQS9wOhz5KuZ22OOOESPzfYz5nCPpNfXWOM0GgN40Sdxkr8RnyLBDgAErr/exec";
   const userId = "XXX";
   const to = "https://bbc.com/sport";
 
@@ -22,26 +22,14 @@
     //let to = params.get("to");
     //if (!to) return;
 
-    /*
-      const logUrl =
-      WEB_APP_URL + 
-      "?user_id=" + userId + 
-      "&"
-      + params.toString();
+    const logUrl =
+    WEB_APP_URL + 
+    "?user_id=" + userId + 
+    "&"
+    + params.toString();
 
-      console.log('logUrl = ' + logUrl);
-      */
-
-    // Build payload
-    const payload = new URLSearchParams();
-    payload.append("user_id", "XXX");
-    payload.append("slide", params.get("slide"));
-    payload.append("answer", params.get("answer"));
-  
-    // 🔥 THIS NOW WORKS
-    navigator.sendBeacon(WEB_APP_URL, payload);
-
-
+    console.log('logUrl = ' + logUrl);
+    
     // Immediate, top-level redirect
     // window.location.replace(to);
   })();
