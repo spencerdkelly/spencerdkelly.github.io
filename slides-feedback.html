@@ -40,7 +40,10 @@
     
     // Immediate, top-level redirect
     //window.location.replace(to);
-    window.close();
+    setTimeout(() => {
+      window.close();
+    }, 1000);
+    
     
   })();
   
