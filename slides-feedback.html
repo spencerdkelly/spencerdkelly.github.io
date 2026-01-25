@@ -38,7 +38,11 @@
 
     // Close the newly opened browser tab
     console.log('logUrl = ' + logUrl);
-    window.close();
+
+    setTimeout(() => {
+      window.close();
+    }, 300);
+    
     
   })();
   
