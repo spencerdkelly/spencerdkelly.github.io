@@ -31,7 +31,7 @@
 
     // Fire-and-forget logging
     try {
-      await fetch(logUrl, { mode: "no-cors" });
+      fetch(logUrl, { mode: "no-cors" });
     } catch (e) {
       // Ignore logging errors
     }
