@@ -32,6 +32,7 @@
     // Fire-and-forget logging
     try {
       fetch(logUrl, { mode: "no-cors" });
+      window.close();
     } catch (e) {
       // Ignore logging errors
     }
@@ -40,9 +41,9 @@
     
     // Immediate, top-level redirect
     //window.location.replace(to);
-    setTimeout(() => {
-      window.close();
-    }, 50);
+    // setTimeout(() => {
+    //   window.close();
+    // }, 200);
     
     
   })();
