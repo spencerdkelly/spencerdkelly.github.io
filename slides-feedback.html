@@ -31,20 +31,14 @@
 
     // Fire-and-forget logging
     try {
-      fetch(logUrl, { mode: "no-cors" });
-      window.close();
+      await fetch(logUrl, { mode: "no-cors" });
     } catch (e) {
       // Ignore logging errors
     }
 
+    // Close the newly opened browser tab
     console.log('logUrl = ' + logUrl);
-    
-    // Immediate, top-level redirect
-    //window.location.replace(to);
-    // setTimeout(() => {
-    //   window.close();
-    // }, 200);
-    
+    window.close();
     
   })();
   
